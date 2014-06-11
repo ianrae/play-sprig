@@ -1,0 +1,9 @@
+{
+"records": [
+	 {"sprig_id":10,"name":"admin","subjId":0,"algo":0,"pwd":"a"},
+	  {"sprig_id":20,"name":"ian","subjId":0,"algo":6,"pwd":"a"},
+	  {"sprig_id":30,"name":"bob","subjId":0,"algo":5,"pwd":"a"},
+	  {"sprig_id":40,"name":"sue","subjId":0,"algo":0,"pwd":"a"}
+	]
+}
+ 

@@ -1,5 +1,7 @@
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 import org.junit.Test;
 import org.mef.sprig.Sprig;
 
@@ -25,10 +27,41 @@ public class OtherTests
 	}
 
 	@Test
+	public void testFile()
+	{
+		String path = getTestFile("User.json");
+		log(path);
+		File f = new File(path);
+		assertTrue(f.exists());
+	}
+
+	@Test
 	public void test() throws Exception 
 	{
+		Class clazz = User.class;
+		String s = clazz.getSimpleName();
+		log(s);
+
 		int n = Sprig.load(User.class);
 		assertEquals(0, n);
+	}
+
+	//--helpers--
+	private void log(String s) 
+	{
+		System.out.println(s);
+
+	}
+
+	private String getTestFile(String filename)
+	{
+		String path = new File(".").getAbsolutePath();
+		if (path.endsWith("."))
+		{
+			path = path.substring(0, path.length() - 1);
+		}
+		path += "test\\testfiles\\" + filename;
+		return path;
 	}
 
 }

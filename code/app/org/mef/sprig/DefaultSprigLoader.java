@@ -2,13 +2,14 @@ package org.mef.sprig;
 
 import java.util.Map;
 
+@SuppressWarnings("rawtypes")
 public class DefaultSprigLoader implements SprigLoader
 {
-	private Object obj;
+	private Class clazz;
 	
-	public DefaultSprigLoader(Object obj)
+	public DefaultSprigLoader(Class clazz)
 	{
-		this.obj = obj;
+		this.clazz = clazz;
 		
 	}
 	@Override
@@ -27,6 +28,11 @@ public class DefaultSprigLoader implements SprigLoader
 	public void resolve(Object sourceObj, String fieldName, Object targetObj) {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public String getNameOfClassBeingLoaded() 
+	{
+		return clazz.getSimpleName();
 	}
 
 }

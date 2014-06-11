@@ -27,20 +27,34 @@ public class Sprig //implements LoaderObserver
 			{
 				tmp = (SprigLoader)obj;
 			}
+			else if (obj instanceof Class)
+			{
+				tmp = new DefaultSprigLoader((Class)obj);
+			}
 			else
 			{
-				tmp = new DefaultSprigLoader(obj);
+				throw new IllegalArgumentException("parameter must be Class or a SprigLoader");
 			}
 			
 			Wrapper wrapper = new Wrapper(tmp);
 			L.add(wrapper);
 		}
 		
-//		int n = self.doLoad(objs);
-		int n = 0;
+		int n = self.doLoad(L);
 		return n;
 	}
 
+	private int doLoad(List<Wrapper> wrapperL) throws Exception
+	{
+		for(Wrapper wrapper : wrapperL)
+		{
+			wrapper.load(seedDir);
+		}
+		
+		return 0;
+	}
+	
+	//===============================
 //	@SuppressWarnings("rawtypes")
 //	private Map<Class, List<Object>> resultMap = new HashMap<Class, List<Object>>();
 //	@SuppressWarnings("rawtypes")
