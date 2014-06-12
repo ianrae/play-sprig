@@ -22,6 +22,11 @@ public class Sprig
 	@SuppressWarnings("rawtypes")
 	public static int load(Object... objs) throws Exception
 	{
+		return load(null, objs);
+	}
+	@SuppressWarnings("rawtypes")
+	public static int load(String subDir, Object... objs) throws Exception
+	{
 		Sprig self = new Sprig();
 		theInstance = self;
 		
@@ -47,7 +52,7 @@ public class Sprig
 			L.add(wrapper);
 		}
 		
-		int n = self.doLoad(L);
+		int n = self.doLoad(subDir, L);
 		return n;
 	}
 	
@@ -65,7 +70,7 @@ public class Sprig
 	protected Map<String, Wrapper> loaderMap = new HashMap<String, Wrapper>();
 	protected List<ViaRef> viaL = new ArrayList<ViaRef>();
 
-	public Sprig()
+	protected Sprig()
 	{
 	}
 	
@@ -74,14 +79,15 @@ public class Sprig
 		System.out.println(s);
 	}
 	
-	protected int doLoad(List<Wrapper> wrapperL) throws Exception
+	protected int doLoad(String subDir, List<Wrapper> wrapperL) throws Exception
 	{
 		int numObjLoaded = 0;
 		
 		List<Object> loadedObjL = null;
 		for(Wrapper wrapper : wrapperL)
 		{
-			loadedObjL = wrapper.load(seedDir, viaL);  //read the JSON
+			String dir = getDir(subDir);
+			loadedObjL = wrapper.load(dir, viaL);  //read the JSON
 			
 			addToResultMap(wrapper.getLoader().getClassBeingLoaded(), loadedObjL);
 			numObjLoaded += loadedObjL.size();
@@ -113,6 +119,18 @@ public class Sprig
 		return numObjLoaded;
 	}
 	
+	private String getDir(String subDir) 
+	{
+		if (subDir == null)
+		{
+			return seedDir;
+		}
+		else
+		{
+			return seedDir + "/" + subDir;
+		}
+	}
+
 	@SuppressWarnings("rawtypes")
 	protected void addToResultMap(Class classBeingLoaded, List<Object> L) 
 	{
