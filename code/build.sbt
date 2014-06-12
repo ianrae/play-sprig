@@ -1,11 +1,12 @@
 name := "sprig"
 
-version := "1.0-SNAPSHOT"
+version := "0.1-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   javaJdbc,
   javaEbean,
-  cache
+  cache,
+  "commons-io" % "commons-io" % "2.3"
 )     
 
 play.Project.playJavaSettings
