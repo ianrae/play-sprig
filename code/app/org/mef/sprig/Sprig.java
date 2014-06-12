@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mef.sprig.json.Reader;
 import org.mef.sprig.util.TSortNode;
 import org.mef.sprig.util.TopologicalSort;
 
@@ -17,7 +18,8 @@ public class Sprig
 {
 	protected static String seedDir = "conf/sprig";
 	protected static Sprig theInstance;
-
+	protected static Reader reader;
+	
 	/**
 	 * Sets the directory to be used, when you want JSON files in some other directory
 	 * than 'conf/sprig'.
@@ -28,6 +30,11 @@ public class Sprig
 	public static void setDir(String dir)
 	{
 		seedDir = dir;
+	}
+	
+	public static void setReader(Reader r)
+	{
+		reader = r;
 	}
 	
 	/**
@@ -72,7 +79,7 @@ public class Sprig
 				throw new IllegalArgumentException("parameter must be Class or a SprigLoader");
 			}
 			
-			Wrapper wrapper = new Wrapper(tmp);
+			Wrapper wrapper = new Wrapper(tmp, reader);
 			L.add(wrapper);
 		}
 		

@@ -9,7 +9,7 @@ import org.mef.sprig.util.ResourceReader;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JsonFileReader 
+public class JsonFileReader implements Reader
 {
 	private String dir;
 	private String className;

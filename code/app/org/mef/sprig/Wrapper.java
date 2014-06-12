@@ -6,20 +6,22 @@ import java.util.List;
 import java.util.Map;
 
 import org.mef.sprig.json.JsonFileReader;
+import org.mef.sprig.json.Reader;
 
 public class Wrapper 
 {
 	@SuppressWarnings("rawtypes")
 	private SprigLoader loader;
-	private JsonFileReader fileLoader;
+	private Reader reader;
 	public Map<Integer,Object> sprigIdMap = new HashMap<Integer, Object>();
 
 	public static final String SPRIG_ID_NAME = "sprig_id";
 
 	
-	public Wrapper(SprigLoader loader)
+	public Wrapper(SprigLoader loader, Reader reader)
 	{
 		this.loader = loader;
+		this.reader = reader;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -32,9 +34,9 @@ public class Wrapper
 	public List<Object> load(String dir, List<ViaRef> viaL) throws Exception
 	{
 		String className = getNameOfClassBeingLoaded();
-		this.fileLoader = new JsonFileReader(dir, className);
+		this.reader = new JsonFileReader(dir, className);
 		
-		List<Map<String,Object>> list = fileLoader.load();
+		List<Map<String,Object>> list = reader.load();
 		List<Object> L = parseObjects(list, viaL);
 		return L;
 	}
