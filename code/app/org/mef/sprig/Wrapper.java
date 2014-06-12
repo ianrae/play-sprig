@@ -28,30 +28,18 @@ public class Wrapper
 		return clazz.getSimpleName();
 	}
 
-	public List<Object> load(String dir) throws Exception
+	public List<Object> load(String dir, List<ViaRef> viaL) throws Exception
 	{
 		String className = getNameOfClassBeingLoaded();
 		this.fileLoader = new JsonFileLoader(dir, className);
 		
 		List<Map<String,Object>> list = fileLoader.load();
-		
-		List<Object> L = doparseItems(list);
-
-//		List<Object> storedL = resultMap.get(loader.getClassBeingLoaded());
-//		if (storedL != null)
-//		{
-//			storedL.addAll(L);
-//		}
-//		else
-//		{
-//			List<Object> objL = (List<Object>)(List<?>)L;
-//			resultMap.put(loader.getClassBeingLoaded(), objL);
-//		}
+		List<Object> L = doparseItems(list, viaL);
 		return L;
 	}
 	
 	
-	public List<Object> doparseItems(List<Map<String,Object>> inputList)
+	public List<Object> doparseItems(List<Map<String,Object>> inputList, List<ViaRef> viaL)
 	{
 		List<Object> resultL = new ArrayList<Object>();
 
@@ -73,30 +61,29 @@ public class Wrapper
 			for(String key : params.keySet())
 			{
 				String val = (String) params.get(key).toString();
-				if (false) //containsVia(val))
+				if (containsVia(val))
 				{
-////					String data2 = "{'type':'Shirt', 'items':[{'id':1,'color':'<% sprig_record(Color,2)%>'}]}";
-//					
-//					System.out.println(key);
-//					val = val.replace("<%", "");
-//					val = val.replace("%>", "");
-////					String target = "sprig_record(";
-//					int pos = val.indexOf('(');
-//					int pos2 = val.indexOf(',', pos);
-//					int pos3 = val.indexOf(')', pos);
-//					String op = val.substring(0, pos).trim();
-//					String namex = val.substring(pos + 1, pos2).trim();
-//					String valx = val.substring(pos2 + 1, pos3).trim();
-//					
-//					//sourceclass,field,obj,target class,field,val,obj
-//					ViaRef ref = new ViaRef();
-//					ref.sourceClazz = this.classBeingLoaded;
-//					ref.sourceField = key;
-//					ref.sourceObj = obj;
-//					ref.targetClassName = namex;
-//					ref.targetField = "sprig_id";
-//					ref.targetVal = valx;
-//					observer.addViaRef(ref);
+//					String data2 = "{'type':'Shirt', 'items':[{'id':1,'color':'<% sprig_record(Color,2)%>'}]}";
+					System.out.println(key);
+					val = val.replace("<%", "");
+					val = val.replace("%>", "");
+//					String target = "sprig_record(";
+					int pos = val.indexOf('(');
+					int pos2 = val.indexOf(',', pos);
+					int pos3 = val.indexOf(')', pos);
+					String op = val.substring(0, pos).trim();
+					String namex = val.substring(pos + 1, pos2).trim();
+					String valx = val.substring(pos2 + 1, pos3).trim();
+					
+					//sourceclass,field,obj,target class,field,val,obj
+					ViaRef ref = new ViaRef();
+					ref.sourceClazz = loader.getClassBeingLoaded();
+					ref.sourceField = key;
+					ref.sourceObj = obj;
+					ref.targetClassName = namex;
+					ref.targetField = "sprig_id";
+					ref.targetVal = valx;
+					viaL.add(ref);
 				}
 				else if (! key.equals(SPRIG_ID_NAME))
 				{
@@ -111,6 +98,11 @@ public class Wrapper
 		return resultL;
 	}
 
+	private boolean containsVia(String key) 
+	{
+		return (key.startsWith("<%") && key.endsWith("%>"));
+	}
+	
 	private void parseSprigId(Map<String, Object> map, Object obj) 
 	{
 		String idName = SPRIG_ID_NAME;

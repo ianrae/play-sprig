@@ -57,7 +57,7 @@ public class Sprig //implements LoaderObserver
 		List<Object> loadedObjL = null;
 		for(Wrapper wrapper : wrapperL)
 		{
-			loadedObjL = wrapper.load(seedDir);  //read the JSON
+			loadedObjL = wrapper.load(seedDir, viaL);  //read the JSON
 			
 			addToResultMap(wrapper.getLoader().getClassBeingLoaded(), loadedObjL);
 			numObjLoaded += loadedObjL.size();
@@ -105,7 +105,7 @@ public class Sprig //implements LoaderObserver
 	private Map<Class, List<Object>> resultMap = new HashMap<Class, List<Object>>();
 //	@SuppressWarnings("rawtypes")
 //	private Map<String, SprigLoader> loaderMap = new HashMap<String, SprigLoader>();
-//	private List<ViaRef> viaL = new ArrayList<ViaRef>();
+	private List<ViaRef> viaL = new ArrayList<ViaRef>();
 //	private int failCount; //# errors
 
 	public Sprig()
