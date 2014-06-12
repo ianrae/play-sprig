@@ -8,22 +8,46 @@ import java.util.Map;
 import org.mef.sprig.util.TSortNode;
 import org.mef.sprig.util.TopologicalSort;
 
-
+/** 
+ * Main API class for Sprig.
+ * Loads JSON into model objects and saves them to the database.
+ *
+ */
 public class Sprig 
 {
 	protected static String seedDir = "conf/sprig";
 	protected static Sprig theInstance;
-	
+
+	/**
+	 * Sets the directory to be used, when you want JSON files in some other directory
+	 * than 'conf/sprig'.
+	 * 
+	 * Used internally for unit testing. 
+	 * @param dir
+	 */
 	public static void setDir(String dir)
 	{
 		seedDir = dir;
 	}
 	
-	@SuppressWarnings("rawtypes")
+	/**
+	 * Load the seed data for the given modes.  
+	 * @param objs Each object is either a Class of a model to be loaded, or a loader that implements SprigLoader
+	 * @return
+	 * @throws Exception
+	 */
 	public static int load(Object... objs) throws Exception
 	{
 		return load(null, objs);
 	}
+	
+	/**
+	 * Load the seed data for the given modes.  
+	 * @param dir A sub-directory (under 'conf/sprig') in which to load JSON files.
+	 * @param objs Each object is either a Class of a model to be loaded, or a loader that implements SprigLoader
+	 * @return
+	 * @throws Exception
+	 */
 	@SuppressWarnings("rawtypes")
 	public static int load(String subDir, Object... objs) throws Exception
 	{
@@ -79,6 +103,7 @@ public class Sprig
 		System.out.println(s);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	protected int doLoad(String subDir, List<Wrapper> wrapperL) throws Exception
 	{
 		int numObjLoaded = 0;
@@ -242,6 +267,7 @@ public class Sprig
 		return false;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected boolean resolveAsDeferredId(ViaRef ref)
 	{
 		if (ref.targetField.equals("sprig_id"))

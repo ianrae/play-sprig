@@ -6,6 +6,12 @@ import org.springframework.beans.BeanWrapperImpl;
 
 import play.db.ebean.Model;
 
+/**
+ * Loads Play models or other Java beans. Uses Spring's BeanWrapperImpl
+ * to set property values in the model object.
+ *
+ * Sprig uses this loader if a custom loader is not provided.
+ */
 @SuppressWarnings("rawtypes")
 public class DefaultSprigLoader implements SprigLoader<Object>
 {
