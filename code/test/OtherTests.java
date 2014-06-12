@@ -50,7 +50,7 @@ public class OtherTests
 		int n = Sprig.load(User.class);
 		assertEquals(2, n);
 		
-		List<Object> L = Sprig.getLoadedObjects();
+		List<Object> L = Sprig.getLoadedObjects(User.class);
 		assertEquals(2, L.size());
 		User u = (User)L.get(0);
 		assertEquals("bob", u.firstName);

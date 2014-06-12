@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.springframework.beans.BeanWrapperImpl;
 
+import play.db.ebean.Model;
+
 @SuppressWarnings("rawtypes")
 public class DefaultSprigLoader implements SprigLoader
 {
@@ -28,9 +30,17 @@ public class DefaultSprigLoader implements SprigLoader
 	}
 
 	@Override
-	public void save(Object obj) {
-		// TODO Auto-generated method stub
-		
+	public void save(Object obj) 
+	{
+		if (obj instanceof Model)
+		{
+			Model m = (Model)obj;
+			m.save();
+		}
+		else
+		{
+			log("not an play.Model object. you must use a custom loader.");
+		}
 	}
 
 	@Override

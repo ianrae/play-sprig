@@ -18,7 +18,7 @@ public class Wrapper
 		this.loader = loader;
 	}
 	
-	private String getNameOfClassBeingLoaded()
+	public String getNameOfClassBeingLoaded()
 	{
 		Class clazz = loader.getClassBeingLoaded();
 		return clazz.getSimpleName();
@@ -105,5 +105,18 @@ public class Wrapper
 		}
 		
 		return resultL;
+	}
+
+	public SprigLoader getLoader() 
+	{
+		return this.loader;
+	}
+
+	public void saveOrUpdate(List<Object> L) 
+	{
+		for(Object obj : L)
+		{
+			loader.save(obj);
+		}
 	}
 }

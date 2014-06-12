@@ -2,6 +2,7 @@ package org.mef.sprig;
 
 import java.util.Map;
 
+//http://stackoverflow.com/questions/356583/can-i-reflectively-instantiate-a-generic-type-in-java
 
 public interface SprigLoader //<T> 
 {

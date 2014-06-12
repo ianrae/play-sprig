@@ -1,7 +1,9 @@
 package org.mef.sprig;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Sprig //implements LoaderObserver
@@ -16,7 +18,7 @@ public class Sprig //implements LoaderObserver
 	public static int load(Object... objs) throws Exception
 	{
 		Sprig self = new Sprig();
-		
+		theInstance = self;
 		List<Wrapper> L = new ArrayList<Wrapper>();
 		
 		for(Object obj : objs)
@@ -44,23 +46,64 @@ public class Sprig //implements LoaderObserver
 		return n;
 	}
 	
-	private static List<Object> mostRecentLoadedObjectsL;
-
+//	private static List<Object> mostRecentLoadedObjectsL;
+	private int failCount;
+	private static Sprig theInstance;
+	
 	private int doLoad(List<Wrapper> wrapperL) throws Exception
 	{
+		int numObjLoaded = 0;
+		
 		List<Object> loadedObjL = null;
 		for(Wrapper wrapper : wrapperL)
 		{
 			loadedObjL = wrapper.load(seedDir);
+			addToResultMap(wrapper.getLoader().getClassBeingLoaded(), loadedObjL);
+			numObjLoaded += loadedObjL.size();
 		}
-		mostRecentLoadedObjectsL = loadedObjL;
 		
-		return (loadedObjL == null) ? 0 : loadedObjL.size();
+//		return (loadedObjL == null) ? 0 : loadedObjL.size();
+		log("and save..");
+		
+		List<SprigLoader> soFarL = new ArrayList<SprigLoader>();
+		failCount = 0;
+		for(Wrapper wrapper : wrapperL) //sortedL
+		{
+			SprigLoader loader = wrapper.getLoader();
+			log(String.format("SEED saving %s..", wrapper.getNameOfClassBeingLoaded()));
+			
+			List<Object> L = this.resultMap.get(loader.getClassBeingLoaded());
+			wrapper.saveOrUpdate(L);
+
+			soFarL.add(loader);
+			//doResolve(soFarL);
+			if (failCount > 0)
+			{
+				throw new IllegalStateException("SEED resolve failed");
+			}
+		}
+		return numObjLoaded;
 	}
 	
+	private void addToResultMap(Class classBeingLoaded, List<Object> L) 
+	{
+		List<Object> storedL = resultMap.get(classBeingLoaded);
+		if (storedL != null)
+		{
+			storedL.addAll(L);
+		}
+		else
+		{
+			resultMap.put(classBeingLoaded, L);
+		}
+	}
+	private void log(String s)
+	{
+		System.out.println(s);
+	}
 	//===============================
 //	@SuppressWarnings("rawtypes")
-//	private Map<Class, List<Object>> resultMap = new HashMap<Class, List<Object>>();
+	private Map<Class, List<Object>> resultMap = new HashMap<Class, List<Object>>();
 //	@SuppressWarnings("rawtypes")
 //	private Map<String, SprigLoader> loaderMap = new HashMap<String, SprigLoader>();
 //	private List<ViaRef> viaL = new ArrayList<ViaRef>();
@@ -69,9 +112,10 @@ public class Sprig //implements LoaderObserver
 	public Sprig()
 	{
 	}
-	public static List<Object> getLoadedObjects() 
+	public static List<Object> getLoadedObjects(Class clazz) 
 	{
-		return mostRecentLoadedObjectsL;
+		List<Object> L = theInstance.resultMap.get(clazz);
+		return L;
 	}
 
 //	public Map<Class, List<Object>> getResultMap()
