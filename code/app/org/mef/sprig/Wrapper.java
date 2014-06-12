@@ -9,6 +9,7 @@ import org.mef.sprig.json.JsonFileReader;
 
 public class Wrapper 
 {
+	@SuppressWarnings("rawtypes")
 	private SprigLoader loader;
 	private JsonFileReader fileLoader;
 	public Map<Integer,Object> sprigIdMap = new HashMap<Integer, Object>();
@@ -34,13 +35,13 @@ public class Wrapper
 		this.fileLoader = new JsonFileReader(dir, className);
 		
 		List<Map<String,Object>> list = fileLoader.load();
-		List<Object> L = doparseItems(list, viaL);
+		List<Object> L = parseObjects(list, viaL);
 		return L;
 	}
 	
 	
 	@SuppressWarnings("rawtypes")
-	private List<Object> doparseItems(List<Map<String,Object>> inputList, List<ViaRef> viaL)
+	public List<Object> parseObjects(List<Map<String,Object>> inputList, List<ViaRef> viaL)
 	{
 		List<Object> resultL = new ArrayList<Object>();
 
