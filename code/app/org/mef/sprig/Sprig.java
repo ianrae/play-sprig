@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mef.sprig.util.TSortNode;
+import org.mef.sprig.util.TopologicalSort;
+
 
 public class Sprig //implements LoaderObserver
 {
@@ -63,10 +66,12 @@ public class Sprig //implements LoaderObserver
 			numObjLoaded += loadedObjL.size();
 		}
 		
+		List<Wrapper> sortedL = tsort(wrapperL);
+
 		log("and save..");
 		List<SprigLoader> soFarL = new ArrayList<SprigLoader>();
 		failCount = 0;
-		for(Wrapper wrapper : wrapperL) //sortedL
+		for(Wrapper wrapper : sortedL)
 		{
 			SprigLoader loader = wrapper.getLoader();
 			log(String.format("SEED saving %s..", wrapper.getNameOfClassBeingLoaded()));
@@ -117,153 +122,73 @@ public class Sprig //implements LoaderObserver
 		return L;
 	}
 
-//	public Map<Class, List<Object>> getResultMap()
-//	{
-//		return this.resultMap;
-//	}
-//	
-//	@SuppressWarnings({ "rawtypes", "unchecked" })
-//	private int doLoad(SprigLoader...loaders) throws Exception
-//	{
-//		int numObj = 0;
-//		for(SprigLoader loader : loaders)
-//		{
-//			String className = loader.getNameOfClassBeingLoaded();
-//			String path = className + ".json";
-//			String json = ResourceReader.readSeedFile(path, seedDir);
-//			if (json == null || json.isEmpty()) //fix later!!
-//			{
-//				log(String.format("SEED LOAD failed: %s", path));
-//				return 0;
-//			}
-//
-//			log(String.format("SEED %s loading..", path));
-//			numObj += parseType(loader, json);
-//			
-//			this.loaderMap.put(className, loader);
-//		}
-//
-//		List<SprigLoader> sortedL = tsort(loaders);
-//
-////		logDebug("and save..");
-//		List<SprigLoader> soFarL = new ArrayList<SprigLoader>();
-//		failCount = 0;
-//		for(SprigLoader loader : sortedL)
-//		{
-//			log(String.format("SEED saving %s..", loader.getNameOfClassBeingLoaded()));
-//			List<Object> L = this.resultMap.get(loader.getClassBeingLoaded());
-//			loader.saveOrUpdate(L);
-//
-//			soFarL.add(loader);
-//			doResolve(soFarL);
-//			if (failCount > 0)
-//			{
-//				throw new IllegalStateException("SEED resolve failed");
-//			}
-//		}
-//		
-//		if (viaL.size() > 0)
-//		{
-//			log(String.format("SEED FAILED with %d unresolved sprig_id references", viaL.size()));
-//		}
-//
-//		return numObj;
-//	}
-//	@SuppressWarnings({ "unchecked", "rawtypes" })
-//	public int parseType(SprigLoader loader, String inputJson) throws Exception
-//	{
-//		Map<String,Object> myMap = new HashMap<String, Object>();
-//
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		String mapData = inputJson;
-//		myMap = objectMapper.readValue(mapData, new TypeReference<HashMap<String,Object>>() {});
-////		System.out.println("Map using TypeReference: "+myMap);
-//
-//		List<Map<String,Object>> myList = (List<Map<String, Object>>) myMap.get("records");
-//
-//		//                List<Object> L = (List<Flour>)(List<?>) loader.parseItems(inner, this);
-//		List<Object> L = loader.doparseItems(this, myList);
-//
-//		List<Object> storedL = resultMap.get(loader.getClassBeingLoaded());
-//		if (storedL != null)
-//		{
-//			storedL.addAll(L);
-//		}
-//		else
-//		{
-//			List<Object> objL = (List<Object>)(List<?>)L;
-//			resultMap.put(loader.getClassBeingLoaded(), objL);
-//		}
-//		return L.size();
-//	}
-//	
-//	@SuppressWarnings("rawtypes")
-//	private List<SprigLoader> tsort(SprigLoader[] loaders)
-//	{
-//		List<TSortNode> L = new ArrayList<TSortNode>();
-//		for(SprigLoader loader : loaders)
-//		{
-//			TSortNode node = new TSortNode(loader);
-//			L.add(node);
-//		}
-//		
-//		
-//		for(ViaRef via : viaL)
-//		{
-//			SprigLoader srcLoader = findByClass(loaders, via.sourceClazz);
-//			SprigLoader targetLoader = findByClassName(loaders, via.targetClassName);
-//			
-//			TSortNode node1 = null;
-//			TSortNode node2 = null;
-//			for(TSortNode tmp : L)
-//			{
-//				if (tmp.obj == srcLoader)
-//				{
-//					node1 = tmp;
-//				}
-//				else if (tmp.obj == targetLoader)
-//				{
-//					node2 = tmp;
-//				}
-//			}
-//
-//			node1.addDep(node2);
-//		}
-//		
-//		List<TSortNode> sortL = TopologicalSort.sort(L);
-//		
-//		List<SprigLoader> sortedL = new ArrayList<SprigLoader>();
-//		for(TSortNode node : sortL)
-//		{
-//			sortedL.add((SprigLoader) node.obj);
-//		}
-//		return sortedL;
-//	}
-//
-//	@SuppressWarnings("rawtypes")
-//	private SprigLoader findByClass(SprigLoader[] loaders, Class clazz) 
-//	{
-//		for(SprigLoader loader : loaders)
-//		{
-//			if (loader.getClassBeingLoaded() == clazz)
-//			{
-//				return loader;
-//			}
-//		}
-//		return null;
-//	}
-//	@SuppressWarnings("rawtypes")
-//	private SprigLoader findByClassName(SprigLoader[] loaders, String className) 
-//	{
-//		for(SprigLoader loader : loaders)
-//		{
-//			if (loader.getNameOfClassBeingLoaded().equals(className))
-//			{
-//				return loader;
-//			}
-//		}
-//		return null;
-//	}
+	@SuppressWarnings("rawtypes")
+	private List<Wrapper> tsort(List<Wrapper> wrapperL)
+	{
+		List<TSortNode> L = new ArrayList<TSortNode>();
+		for(Wrapper wrapper : wrapperL)
+		{
+			TSortNode node = new TSortNode(wrapper);
+			L.add(node);
+		}
+		
+		for(ViaRef via : viaL)
+		{
+			Wrapper srcWrapper = findByClass(wrapperL, via.sourceClazz);
+			Wrapper targetWrapper = findByClassName(wrapperL, via.targetClassName);
+			
+			TSortNode node1 = null;
+			TSortNode node2 = null;
+			for(TSortNode tmp : L)
+			{
+				if (tmp.obj == srcWrapper)
+				{
+					node1 = tmp;
+				}
+				else if (tmp.obj == targetWrapper)
+				{
+					node2 = tmp;
+				}
+			}
+
+			node1.addDep(node2);
+		}
+		
+		List<TSortNode> sortL = TopologicalSort.sort(L);
+		
+		List<Wrapper> sortedL = new ArrayList<Wrapper>();
+		for(TSortNode node : sortL)
+		{
+			sortedL.add((Wrapper) node.obj);
+		}
+		return sortedL;
+	}
+
+	@SuppressWarnings("rawtypes")
+	private Wrapper findByClass(List<Wrapper> wrapperL, Class clazz) 
+	{
+		for(Wrapper wrapper : wrapperL) 
+		{
+			SprigLoader loader = wrapper.getLoader();
+			if (loader.getClassBeingLoaded() == clazz)
+			{
+				return wrapper;
+			}
+		}
+		return null;
+	}
+	@SuppressWarnings("rawtypes")
+	private Wrapper findByClassName(List<Wrapper> wrapperL, String className) 
+	{
+		for(Wrapper wrapper : wrapperL) 
+		{
+			if (wrapper.getNameOfClassBeingLoaded().equals(className))
+			{
+				return wrapper;
+			}
+		}
+		return null;
+	}
 //	private void log(String s)
 //	{
 //		System.out.println(s);

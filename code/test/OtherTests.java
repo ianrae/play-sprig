@@ -66,8 +66,8 @@ public class OtherTests
 		String path = this.getTestFile(""); 
 		Sprig.setDir(path);
 
-		int n = Sprig.load(User.class);
-		assertEquals(2, n);
+		int n = Sprig.load(User.class, Address.class);
+		assertEquals(4, n);
 		
 		List<Object> L = Sprig.getLoadedObjects(User.class);
 		assertEquals(2, L.size());
