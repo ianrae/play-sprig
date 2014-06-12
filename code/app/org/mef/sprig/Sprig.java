@@ -43,15 +43,19 @@ public class Sprig //implements LoaderObserver
 		int n = self.doLoad(L);
 		return n;
 	}
+	
+	private static List<Object> mostRecentLoadedObjectsL;
 
 	private int doLoad(List<Wrapper> wrapperL) throws Exception
 	{
+		List<Object> loadedObjL = null;
 		for(Wrapper wrapper : wrapperL)
 		{
-			wrapper.load(seedDir);
+			loadedObjL = wrapper.load(seedDir);
 		}
+		mostRecentLoadedObjectsL = loadedObjL;
 		
-		return 0;
+		return (loadedObjL == null) ? 0 : loadedObjL.size();
 	}
 	
 	//===============================
@@ -64,6 +68,10 @@ public class Sprig //implements LoaderObserver
 
 	public Sprig()
 	{
+	}
+	public static List<Object> getLoadedObjects() 
+	{
+		return mostRecentLoadedObjectsL;
 	}
 
 //	public Map<Class, List<Object>> getResultMap()

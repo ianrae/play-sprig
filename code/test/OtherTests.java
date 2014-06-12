@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.List;
 
 import org.junit.Test;
 import org.mef.sprig.Sprig;
@@ -47,7 +48,15 @@ public class OtherTests
 		Sprig.setDir(path);
 
 		int n = Sprig.load(User.class);
-		assertEquals(0, n);
+		assertEquals(2, n);
+		
+		List<Object> L = Sprig.getLoadedObjects();
+		assertEquals(2, L.size());
+		User u = (User)L.get(0);
+		assertEquals("bob", u.firstName);
+		assertEquals("Smith", u.lastName);
+		u = (User)L.get(1);
+		assertEquals("sue", u.firstName);
 	}
 
 	//--helpers--

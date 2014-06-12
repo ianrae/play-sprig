@@ -24,7 +24,7 @@ public class Wrapper
 		return clazz.getSimpleName();
 	}
 
-	public int load(String dir) throws Exception
+	public List<Object> load(String dir) throws Exception
 	{
 		String className = getNameOfClassBeingLoaded();
 		this.fileLoader = new JsonFileLoader(dir, className);
@@ -43,7 +43,7 @@ public class Wrapper
 //			List<Object> objL = (List<Object>)(List<?>)L;
 //			resultMap.put(loader.getClassBeingLoaded(), objL);
 //		}
-		return L.size();
+		return L;
 	}
 	
 	
