@@ -9,12 +9,12 @@ import org.mef.sprig.util.ResourceReader;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JsonFileLoader 
+public class JsonFileReader 
 {
 	private String dir;
 	private String className;
 
-	public JsonFileLoader(String dir, String className)
+	public JsonFileReader(String dir, String className)
 	{
 		this.dir = dir;
 		this.className = className;

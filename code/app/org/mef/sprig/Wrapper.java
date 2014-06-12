@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mef.sprig.json.JsonFileLoader;
+import org.mef.sprig.json.JsonFileReader;
 
 public class Wrapper 
 {
 	private SprigLoader loader;
-	private JsonFileLoader fileLoader;
+	private JsonFileReader fileLoader;
 	public Map<Integer,Object> sprigIdMap = new HashMap<Integer, Object>();
 
 	public static final String SPRIG_ID_NAME = "sprig_id";
@@ -31,7 +31,7 @@ public class Wrapper
 	public List<Object> load(String dir, List<ViaRef> viaL) throws Exception
 	{
 		String className = getNameOfClassBeingLoaded();
-		this.fileLoader = new JsonFileLoader(dir, className);
+		this.fileLoader = new JsonFileReader(dir, className);
 		
 		List<Map<String,Object>> list = fileLoader.load();
 		List<Object> L = doparseItems(list, viaL);
