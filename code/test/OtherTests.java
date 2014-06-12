@@ -27,6 +27,25 @@ public class OtherTests
 		private String lastName;
 	}
 
+	public static class Address
+	{
+		public String getStreet() {
+			return street;
+		}
+		public void setStreet(String street) {
+			this.street = street;
+		}
+		public int getRegion() {
+			return region;
+		}
+		public void setRegion(int region) {
+			this.region = region;
+		}
+		private String street;
+		private int region;
+	}
+
+	
 	@Test
 	public void testFile()
 	{
@@ -38,7 +57,7 @@ public class OtherTests
 
 	@SuppressWarnings("rawtypes")
 	@Test
-	public void test() throws Exception 
+	public void testUser() throws Exception 
 	{
 		Class clazz = User.class;
 		String s = clazz.getSimpleName();
@@ -59,6 +78,23 @@ public class OtherTests
 		assertEquals("sue", u.firstName);
 	}
 
+	@SuppressWarnings("rawtypes")
+	@Test
+	public void testAddress() throws Exception 
+	{
+		String path = this.getTestFile(""); 
+		Sprig.setDir(path);
+
+		int n = Sprig.load(Address.class);
+		assertEquals(2, n);
+		
+		List<Object> L = Sprig.getLoadedObjects(Address.class);
+		assertEquals(2, L.size());
+		Address u = (Address)L.get(0);
+		assertEquals("Main", u.street);
+		assertEquals(42, u.region);
+	}
+	
 	//--helpers--
 	private void log(String s) 
 	{
