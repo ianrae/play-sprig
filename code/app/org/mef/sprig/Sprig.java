@@ -84,6 +84,12 @@ public class Sprig
 		}
 		
 		int n = self.doLoad(subDir, L);
+		
+		//and close
+		for(Wrapper wrapper : L)
+		{
+			wrapper.getLoader().close();
+		}
 		return n;
 	}
 	

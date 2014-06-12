@@ -53,6 +53,12 @@ public class CustomLoaderTests extends BaseTest
 		{
 			return Airport.class;
 		}
+
+		@Override
+		public void close() {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}
 	

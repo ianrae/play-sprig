@@ -94,5 +94,24 @@ Create a custom loader and override the *save* method.
 
 
 ### EBean
+Sprig's default loader will save models using Model.save. If the model object is not a Model then you must create
+a custom loader and implement save.
+
+	public void save(Object obj) 
+	{
+		if (obj instanceof Model)
+		{
+			Model m = (Model)obj;
+			m.save();
+		}
+		else
+		{
+			log("Error: not an play.Model object. you must use a custom loader.");
+		}
+	}
+
 
 ### Database execution
+Sprig is generally used in Global.java.  For JPA persistence you need to use JPA.withTransaction or other similar mechanism.
+
+SprigLoader has a close method that can be used to close any database connections.

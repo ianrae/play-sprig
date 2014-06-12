@@ -39,6 +39,12 @@ public interface SprigLoader<T>
 	 * @return
 	 */
 	Class<T> getClassBeingLoaded();
+	
+	/**
+	 * Convenience method. It is the last method called on the loader.
+	 * Use it for any cleanup code you need.
+	 */
+	void close();
 }
 
 

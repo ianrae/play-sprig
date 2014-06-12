@@ -64,9 +64,15 @@ public class DefaultSprigLoader implements SprigLoader<Object>
 		return clazz;
 	}
 
+	@Override
+	public void close() 
+	{
+	}
+	
 	//--helper--
 	private void log(String s)
 	{
 		System.out.println(s);
 	}
+	
 }
