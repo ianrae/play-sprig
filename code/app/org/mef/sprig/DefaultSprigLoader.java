@@ -44,10 +44,13 @@ public class DefaultSprigLoader implements SprigLoader
 	}
 
 	@Override
-	public void resolve(Object sourceObj, String fieldName, Object targetObj) {
-		// TODO Auto-generated method stub
-		
+	public void resolve(Object obj, String fieldName, Object targetObj) 
+	{
+		log(fieldName);
+		BeanWrapperImpl w = new BeanWrapperImpl(obj);
+		w.setPropertyValue(fieldName, targetObj);
 	}
+	
 	@Override
 	public Class getClassBeingLoaded() 
 	{

@@ -64,12 +64,14 @@ public class Sprig //implements LoaderObserver
 			
 			addToResultMap(wrapper.getLoader().getClassBeingLoaded(), loadedObjL);
 			numObjLoaded += loadedObjL.size();
+			
+			this.loaderMap.put(wrapper.getNameOfClassBeingLoaded(), wrapper);
 		}
 		
 		List<Wrapper> sortedL = tsort(wrapperL);
 
 		log("and save..");
-		List<SprigLoader> soFarL = new ArrayList<SprigLoader>();
+		List<Wrapper> soFarL = new ArrayList<Wrapper>();
 		failCount = 0;
 		for(Wrapper wrapper : sortedL)
 		{
@@ -79,8 +81,8 @@ public class Sprig //implements LoaderObserver
 			List<Object> L = this.resultMap.get(loader.getClassBeingLoaded());
 			wrapper.saveOrUpdate(L);
 
-			soFarL.add(loader);
-			//doResolve(soFarL);
+			soFarL.add(wrapper);
+			doResolve(soFarL);
 			if (failCount > 0)
 			{
 				throw new IllegalStateException("SEED resolve failed");
@@ -109,7 +111,7 @@ public class Sprig //implements LoaderObserver
 //	@SuppressWarnings("rawtypes")
 	private Map<Class, List<Object>> resultMap = new HashMap<Class, List<Object>>();
 //	@SuppressWarnings("rawtypes")
-//	private Map<String, SprigLoader> loaderMap = new HashMap<String, SprigLoader>();
+	private Map<String, Wrapper> loaderMap = new HashMap<String, Wrapper>();
 	private List<ViaRef> viaL = new ArrayList<ViaRef>();
 //	private int failCount; //# errors
 
@@ -189,69 +191,67 @@ public class Sprig //implements LoaderObserver
 		}
 		return null;
 	}
-//	private void log(String s)
-//	{
-//		System.out.println(s);
-//	}
-//	@Override
-//	public void addViaRef(ViaRef ref) 
-//	{
-//		viaL.add(ref);
-//	}
-//
-//
-//	@SuppressWarnings("rawtypes")
-//	private boolean doResolve(List<SprigLoader> soFarL)
-//	{
-//		while(doOneRound(soFarL))
-//		{
-//		}
-//		return (this.viaL.size() == 0);
-//	}
-//
-//	@SuppressWarnings("rawtypes")
-//	private boolean doOneRound(List<SprigLoader> soFarL)
-//	{
-//		for(ViaRef vid : viaL)
-//		{
-//			for(SprigLoader loader : soFarL)
-//			{
-//				//once a loaders objects have been saved to the db, we can resolve references to them
-//				String className = loader.getNameOfClassBeingLoaded();
-//				if (className.equals(vid.targetClassName))
-//				{
-//					log("a " + className);
-//					if (resolveAsDeferredId(vid))
-//					{
-//						viaL.remove(vid);
-//						return true;
-//					}
-//				}
-//			}
-//		}
-//
-//		return false;
-//	}
-//
-//	@SuppressWarnings("rawtypes")
-//	private boolean resolveAsDeferredId(ViaRef ref)
-//	{
-//		if (ref.targetField.equals("sprig_id"))
-//		{
-//			SprigLoader loader = this.loaderMap.get(ref.targetClassName);
-//			Integer sprigId = Integer.parseInt(ref.targetVal);
-//			Object obj = loader.getSprigIdMap().objMap.get(sprigId);
-//
-//			SprigLoader sourceLoader = this.loaderMap.get(ref.sourceClazz.getSimpleName());
-//			String fieldName = ref.sourceField; 
-//			if (! sourceLoader.resolve(ref.sourceObj, fieldName, obj))
-//			{
-//				failCount++;
-//				log(String.format("SEED failed to resolve %s.%s to %s.%s ", ref.sourceClazz.getSimpleName(), 
-//						fieldName, ref.targetClassName, ref.targetField));
-//			}
-//			return true;
-//		}
-//		return false;
-//	}
+
+	@SuppressWarnings("rawtypes")
+	private boolean doResolve(List<Wrapper> soFarL)
+	{
+		while(doOneRound(soFarL))
+		{
+		}
+		return (this.viaL.size() == 0);
+	}
+
+	@SuppressWarnings("rawtypes")
+	private boolean doOneRound(List<Wrapper> soFarL)
+	{
+		for(ViaRef vid : viaL)
+		{
+			for(Wrapper wrapper : soFarL)
+			{
+				//once a loaders objects have been saved to the db, we can resolve references to them
+				String className = wrapper.getNameOfClassBeingLoaded();
+				if (className.equals(vid.targetClassName))
+				{
+					log("a " + className);
+					if (resolveAsDeferredId(vid))
+					{
+						viaL.remove(vid);
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@SuppressWarnings("rawtypes")
+	private boolean resolveAsDeferredId(ViaRef ref)
+	{
+		if (ref.targetField.equals("sprig_id"))
+		{
+			Wrapper w = this.loaderMap.get(ref.targetClassName);
+			Integer sprigId = Integer.parseInt(ref.targetVal);
+			Object obj = w.sprigIdMap.get(sprigId);
+
+			Wrapper sourceW = this.loaderMap.get(ref.sourceClazz.getSimpleName());
+			SprigLoader sourceLoader = sourceW.getLoader();
+			String fieldName = ref.sourceField; 
+			
+			//resolve
+			try 
+			{
+				sourceLoader.resolve(ref.sourceObj, fieldName, obj);
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+				failCount++;
+				log(String.format("SEED failed to resolve %s.%s to %s.%s ", ref.sourceClazz.getSimpleName(), 
+						fieldName, ref.targetClassName, ref.targetField));
+			}
+			return true;
+		}
+		return false;
+	}
 }

@@ -25,6 +25,13 @@ public class OtherTests
 		}
 		private String firstName;
 		private String lastName;
+		private Address addr;
+		public Address getAddr() {
+			return addr;
+		}
+		public void setAddr(Address addr) {
+			this.addr = addr;
+		}
 	}
 
 	public static class Address
@@ -74,6 +81,9 @@ public class OtherTests
 		User u = (User)L.get(0);
 		assertEquals("bob", u.firstName);
 		assertEquals("Smith", u.lastName);
+		assertNotNull(u.addr);
+		assertEquals("King", u.addr.getStreet());
+		
 		u = (User)L.get(1);
 		assertEquals("sue", u.firstName);
 	}
