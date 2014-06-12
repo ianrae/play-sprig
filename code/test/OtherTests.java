@@ -1,13 +1,14 @@
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.junit.Test;
 import org.mef.sprig.Sprig;
 
 
-public class OtherTests 
+public class OtherTests extends BaseTest
 {
 	public static class User
 	{
@@ -52,7 +53,7 @@ public class OtherTests
 		private int region;
 	}
 
-	
+
 	@Test
 	public void testFile()
 	{
@@ -69,13 +70,13 @@ public class OtherTests
 		Class clazz = User.class;
 		String s = clazz.getSimpleName();
 		log(s);
-		
+
 		String path = this.getTestFile(""); 
 		Sprig.setDir(path);
 
 		int n = Sprig.load(User.class, Address.class);
 		assertEquals(4, n);
-		
+
 		List<Object> L = Sprig.getLoadedObjects(User.class);
 		assertEquals(2, L.size());
 		User u = (User)L.get(0);
@@ -83,7 +84,7 @@ public class OtherTests
 		assertEquals("Smith", u.lastName);
 		assertNotNull(u.addr);
 		assertEquals("King", u.addr.getStreet());
-		
+
 		u = (User)L.get(1);
 		assertEquals("sue", u.firstName);
 	}
@@ -97,30 +98,61 @@ public class OtherTests
 
 		int n = Sprig.load(Address.class);
 		assertEquals(2, n);
-		
+
 		List<Object> L = Sprig.getLoadedObjects(Address.class);
 		assertEquals(2, L.size());
 		Address u = (Address)L.get(0);
 		assertEquals("Main", u.street);
 		assertEquals(42, u.region);
 	}
-	
-	//--helpers--
-	private void log(String s) 
-	{
-		System.out.println(s);
 
-	}
-
-	private String getTestFile(String filename)
+	@Test
+	public void testT()
 	{
-		String path = new File(".").getAbsolutePath();
-		if (path.endsWith("."))
+		Method getNameMethod;
+		User user = new User();
+		Address addr = new Address();
+		addr.setStreet("abc");
+
+		try
 		{
-			path = path.substring(0, path.length() - 1);
+			getNameMethod = user.getClass().getMethod("setAddr", Address.class);
 		}
-		path += "test\\testfiles\\" + filename;
-		return path;
+		catch (SecurityException exception1)
+		{
+			getNameMethod = null;
+		}
+		catch (NoSuchMethodException exception1)
+		{
+			getNameMethod = null;
+		}
+
+		if (getNameMethod != null)
+		{
+			try
+			{
+				System.out.println(getNameMethod.invoke(user, new Object[]{addr}));
+			}
+			catch (IllegalArgumentException exception)
+			{
+				// TODO Implement this catch block.
+			}
+			catch (IllegalAccessException exception)
+			{
+				// TODO Implement this catch block.
+			}
+			catch (java.lang.reflect.InvocationTargetException exception)
+			{
+				// TODO Implement this catch block.
+			}
+		}
+		else
+		{
+			System.out.print("Unexpected class: ");
+			System.out.println(user.getClass());
+		}		
+
+		assertEquals("abc", user.addr.getStreet());
 	}
 
 }

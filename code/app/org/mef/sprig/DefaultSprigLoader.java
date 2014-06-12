@@ -7,7 +7,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import play.db.ebean.Model;
 
 @SuppressWarnings("rawtypes")
-public class DefaultSprigLoader implements SprigLoader
+public class DefaultSprigLoader implements SprigLoader<Object>
 {
 	private Class clazz;
 	
@@ -28,6 +28,7 @@ public class DefaultSprigLoader implements SprigLoader
 			w.setPropertyValue(propName, val);
 		}
 	}
+	
 
 	@Override
 	public void save(Object obj) 
