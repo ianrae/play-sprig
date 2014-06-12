@@ -35,12 +35,16 @@ public class OtherTests
 		assertTrue(f.exists());
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void test() throws Exception 
 	{
 		Class clazz = User.class;
 		String s = clazz.getSimpleName();
 		log(s);
+		
+		String path = this.getTestFile(""); 
+		Sprig.setDir(path);
 
 		int n = Sprig.load(User.class);
 		assertEquals(0, n);

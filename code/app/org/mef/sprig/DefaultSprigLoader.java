@@ -2,6 +2,8 @@ package org.mef.sprig;
 
 import java.util.Map;
 
+import org.springframework.beans.BeanWrapperImpl;
+
 @SuppressWarnings("rawtypes")
 public class DefaultSprigLoader implements SprigLoader
 {
@@ -13,9 +15,16 @@ public class DefaultSprigLoader implements SprigLoader
 		
 	}
 	@Override
-	public void parse(Object obj, Map map) {
-		// TODO Auto-generated method stub
+	public void parse(Object obj, Map<String,Object> map) 
+	{
+		log("A");
+		BeanWrapperImpl w = new BeanWrapperImpl(obj);
 		
+		for(String propName : map.keySet())
+		{
+			Object val = map.get(propName);
+			w.setPropertyValue(propName, val);
+		}
 	}
 
 	@Override
@@ -30,9 +39,14 @@ public class DefaultSprigLoader implements SprigLoader
 		
 	}
 	@Override
-	public String getNameOfClassBeingLoaded() 
+	public Class getClassBeingLoaded() 
 	{
-		return clazz.getSimpleName();
+		return clazz;
 	}
 
+	//--helper--
+	private void log(String s)
+	{
+		System.out.println(s);
+	}
 }
