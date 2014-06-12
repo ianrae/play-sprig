@@ -9,7 +9,6 @@ import org.mef.sprig.json.JsonFileLoader;
 
 public class Wrapper 
 {
-	@SuppressWarnings("rawtypes")
 	private SprigLoader loader;
 	private JsonFileLoader fileLoader;
 	public Map<Integer,Object> sprigIdMap = new HashMap<Integer, Object>();
@@ -22,6 +21,7 @@ public class Wrapper
 		this.loader = loader;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public String getNameOfClassBeingLoaded()
 	{
 		Class clazz = loader.getClassBeingLoaded();
@@ -39,7 +39,8 @@ public class Wrapper
 	}
 	
 	
-	public List<Object> doparseItems(List<Map<String,Object>> inputList, List<ViaRef> viaL)
+	@SuppressWarnings("rawtypes")
+	private List<Object> doparseItems(List<Map<String,Object>> inputList, List<ViaRef> viaL)
 	{
 		List<Object> resultL = new ArrayList<Object>();
 
@@ -71,7 +72,7 @@ public class Wrapper
 					int pos = val.indexOf('(');
 					int pos2 = val.indexOf(',', pos);
 					int pos3 = val.indexOf(')', pos);
-					String op = val.substring(0, pos).trim();
+//					String op = val.substring(0, pos).trim();
 					String namex = val.substring(pos + 1, pos2).trim();
 					String valx = val.substring(pos2 + 1, pos3).trim();
 					
@@ -118,7 +119,7 @@ public class Wrapper
 		return this.loader;
 	}
 
-	public void saveOrUpdate(List<Object> L) 
+	public void save(List<Object> L) 
 	{
 		for(Object obj : L)
 		{

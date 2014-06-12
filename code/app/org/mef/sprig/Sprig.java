@@ -9,21 +9,23 @@ import org.mef.sprig.util.TSortNode;
 import org.mef.sprig.util.TopologicalSort;
 
 
-public class Sprig //implements LoaderObserver
+public class Sprig 
 {
-	private static String seedDir = "conf/sprig";
-
+	protected static String seedDir = "conf/sprig";
+	protected static Sprig theInstance;
+	
 	public static void setDir(String dir)
 	{
 		seedDir = dir;
 	}
+	
 	@SuppressWarnings("rawtypes")
 	public static int load(Object... objs) throws Exception
 	{
 		Sprig self = new Sprig();
 		theInstance = self;
-		List<Wrapper> L = new ArrayList<Wrapper>();
 		
+		List<Wrapper> L = new ArrayList<Wrapper>();
 		for(Object obj : objs)
 		{
 			SprigLoader tmp;
@@ -49,11 +51,30 @@ public class Sprig //implements LoaderObserver
 		return n;
 	}
 	
-//	private static List<Object> mostRecentLoadedObjectsL;
-	private int failCount;
-	private static Sprig theInstance;
+	@SuppressWarnings("rawtypes")
+	public static List<Object> getLoadedObjects(Class clazz) 
+	{
+		List<Object> L = theInstance.resultMap.get(clazz);
+		return L;
+	}
 	
-	private int doLoad(List<Wrapper> wrapperL) throws Exception
+	//===============================
+	protected int failCount;
+	@SuppressWarnings("rawtypes")
+	protected Map<Class, List<Object>> resultMap = new HashMap<Class, List<Object>>();
+	protected Map<String, Wrapper> loaderMap = new HashMap<String, Wrapper>();
+	protected List<ViaRef> viaL = new ArrayList<ViaRef>();
+
+	public Sprig()
+	{
+	}
+	
+	protected void log(String s)
+	{
+		System.out.println(s);
+	}
+	
+	protected int doLoad(List<Wrapper> wrapperL) throws Exception
 	{
 		int numObjLoaded = 0;
 		
@@ -68,6 +89,7 @@ public class Sprig //implements LoaderObserver
 			this.loaderMap.put(wrapper.getNameOfClassBeingLoaded(), wrapper);
 		}
 		
+		//sort
 		List<Wrapper> sortedL = tsort(wrapperL);
 
 		log("and save..");
@@ -79,7 +101,7 @@ public class Sprig //implements LoaderObserver
 			log(String.format("SEED saving %s..", wrapper.getNameOfClassBeingLoaded()));
 			
 			List<Object> L = this.resultMap.get(loader.getClassBeingLoaded());
-			wrapper.saveOrUpdate(L);
+			wrapper.save(L);
 
 			soFarL.add(wrapper);
 			doResolve(soFarL);
@@ -91,7 +113,8 @@ public class Sprig //implements LoaderObserver
 		return numObjLoaded;
 	}
 	
-	private void addToResultMap(Class classBeingLoaded, List<Object> L) 
+	@SuppressWarnings("rawtypes")
+	protected void addToResultMap(Class classBeingLoaded, List<Object> L) 
 	{
 		List<Object> storedL = resultMap.get(classBeingLoaded);
 		if (storedL != null)
@@ -103,29 +126,8 @@ public class Sprig //implements LoaderObserver
 			resultMap.put(classBeingLoaded, L);
 		}
 	}
-	private void log(String s)
-	{
-		System.out.println(s);
-	}
-	//===============================
-//	@SuppressWarnings("rawtypes")
-	private Map<Class, List<Object>> resultMap = new HashMap<Class, List<Object>>();
-//	@SuppressWarnings("rawtypes")
-	private Map<String, Wrapper> loaderMap = new HashMap<String, Wrapper>();
-	private List<ViaRef> viaL = new ArrayList<ViaRef>();
-//	private int failCount; //# errors
 
-	public Sprig()
-	{
-	}
-	public static List<Object> getLoadedObjects(Class clazz) 
-	{
-		List<Object> L = theInstance.resultMap.get(clazz);
-		return L;
-	}
-
-	@SuppressWarnings("rawtypes")
-	private List<Wrapper> tsort(List<Wrapper> wrapperL)
+	protected List<Wrapper> tsort(List<Wrapper> wrapperL)
 	{
 		List<TSortNode> L = new ArrayList<TSortNode>();
 		for(Wrapper wrapper : wrapperL)
@@ -167,7 +169,7 @@ public class Sprig //implements LoaderObserver
 	}
 
 	@SuppressWarnings("rawtypes")
-	private Wrapper findByClass(List<Wrapper> wrapperL, Class clazz) 
+	protected Wrapper findByClass(List<Wrapper> wrapperL, Class clazz) 
 	{
 		for(Wrapper wrapper : wrapperL) 
 		{
@@ -179,8 +181,7 @@ public class Sprig //implements LoaderObserver
 		}
 		return null;
 	}
-	@SuppressWarnings("rawtypes")
-	private Wrapper findByClassName(List<Wrapper> wrapperL, String className) 
+	protected Wrapper findByClassName(List<Wrapper> wrapperL, String className) 
 	{
 		for(Wrapper wrapper : wrapperL) 
 		{
@@ -192,8 +193,7 @@ public class Sprig //implements LoaderObserver
 		return null;
 	}
 
-	@SuppressWarnings("rawtypes")
-	private boolean doResolve(List<Wrapper> soFarL)
+	protected boolean doResolve(List<Wrapper> soFarL)
 	{
 		while(doOneRound(soFarL))
 		{
@@ -201,8 +201,7 @@ public class Sprig //implements LoaderObserver
 		return (this.viaL.size() == 0);
 	}
 
-	@SuppressWarnings("rawtypes")
-	private boolean doOneRound(List<Wrapper> soFarL)
+	protected boolean doOneRound(List<Wrapper> soFarL)
 	{
 		for(ViaRef vid : viaL)
 		{
@@ -225,8 +224,7 @@ public class Sprig //implements LoaderObserver
 		return false;
 	}
 
-	@SuppressWarnings("rawtypes")
-	private boolean resolveAsDeferredId(ViaRef ref)
+	protected boolean resolveAsDeferredId(ViaRef ref)
 	{
 		if (ref.targetField.equals("sprig_id"))
 		{
