@@ -57,14 +57,13 @@ public class Sprig //implements LoaderObserver
 		List<Object> loadedObjL = null;
 		for(Wrapper wrapper : wrapperL)
 		{
-			loadedObjL = wrapper.load(seedDir);
+			loadedObjL = wrapper.load(seedDir);  //read the JSON
+			
 			addToResultMap(wrapper.getLoader().getClassBeingLoaded(), loadedObjL);
 			numObjLoaded += loadedObjL.size();
 		}
 		
-//		return (loadedObjL == null) ? 0 : loadedObjL.size();
 		log("and save..");
-		
 		List<SprigLoader> soFarL = new ArrayList<SprigLoader>();
 		failCount = 0;
 		for(Wrapper wrapper : wrapperL) //sortedL

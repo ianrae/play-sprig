@@ -12,7 +12,11 @@ public class Wrapper
 	@SuppressWarnings("rawtypes")
 	private SprigLoader loader;
 	private JsonFileLoader fileLoader;
+	public Map<Integer,Object> sprigIdMap = new HashMap<Integer, Object>();
 
+	public static final String SPRIG_ID_NAME = "sprig_id";
+
+	
 	public Wrapper(SprigLoader loader)
 	{
 		this.loader = loader;
@@ -64,7 +68,7 @@ public class Wrapper
 				e.printStackTrace();
 			}
 			resultL.add(obj);
-//			parseSprigId(params, obj);
+			parseSprigId(params, obj);
 
 			for(String key : params.keySet())
 			{
@@ -94,7 +98,7 @@ public class Wrapper
 //					ref.targetVal = valx;
 //					observer.addViaRef(ref);
 				}
-				else
+				else if (! key.equals(SPRIG_ID_NAME))
 				{
 					tmp.put(key, params.get(key));
 				}
@@ -105,6 +109,16 @@ public class Wrapper
 		}
 		
 		return resultL;
+	}
+
+	private void parseSprigId(Map<String, Object> map, Object obj) 
+	{
+		String idName = SPRIG_ID_NAME;
+		if (map.containsKey(idName))
+		{
+			Integer id = (Integer)map.get(idName); //support String later!!!!!!!!1111
+			this.sprigIdMap.put(id, obj);
+		}
 	}
 
 	public SprigLoader getLoader() 
