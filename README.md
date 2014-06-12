@@ -69,11 +69,11 @@ If you have public fields, define a custom loader and override the *parse* metho
 
 
 ### Custom Loaders
+The arguments to Sprig.load must either be a class, such as User.class, or a custom loader that implements SprigLoader.
+
 Use *setLoader* to install a custom loader. 
 
-    Sprig.setLoader(MyCustomLoader())
-    ...
-    Sprig.load(.....
+    Sprig.load(MyCustomUserLoader(), Address.class, ...);
 
 ### Idempotent Loading
 The default loader inserts each parsed model object into the database. This can lead to duplicate records if you restart an application without clearing the database.
