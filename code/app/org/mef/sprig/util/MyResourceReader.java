@@ -35,7 +35,20 @@ public class MyResourceReader
 	
 	InputStream getStream(String relPath)
 	{
-		Application app = Play.application();
+		Application app = getApp();
+		if (app == null)
+		{
+			Logger.info("rr: no play app. try as file");
+			File f = new File(relPath);
+			FileInputStream fstream = null;
+			try {
+				fstream = new FileInputStream(f);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			return fstream;
+		}
+		
 		InputStream in = app.resourceAsStream(relPath); 
 		if (in != null)
 		{
@@ -54,8 +67,18 @@ public class MyResourceReader
 			}
 			return fstream;
 		}
-		
 	}
+
+	private Application getApp()
+	{
+		Application app = null;
+		try {
+			app = Play.application(); //in unit test Play is not running, so just return null
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	
 	private String readInputStream(InputStream input) throws IOException 
 	{
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -64,7 +87,6 @@ public class MyResourceReader
         {
             String line = reader.readLine();
             if (line == null) break;
-            //System.out.println("    " + line);
             sb.append(line);
             sb.append('\n');
         }

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.BeanWrapperImpl;
 
+import play.Logger;
 import play.db.ebean.Model;
 
 /**
@@ -70,9 +71,9 @@ public class DefaultSprigLoader implements SprigLoader<Object>
 	}
 	
 	//--helper--
-	private void log(String s)
+	protected void log(String s)
 	{
-		System.out.println(s);
+		Logger.info(s);
 	}
 	
 }

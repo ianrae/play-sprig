@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.mef.sprig.util.ResourceReader;
 
+import play.Logger;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -53,6 +55,6 @@ public class JsonFileReader implements Reader
 	
 	private void log(String s)
 	{
-		System.out.println(s);
+		Logger.info(s);
 	}
 }
