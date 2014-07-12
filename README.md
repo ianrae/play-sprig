@@ -11,16 +11,16 @@ In your application's startup code, such as Global.java, use Sprig to load data 
  
     Sprig.load(User.class, Address.class);
 
-Sprig will look for matching JSON files in conf/sprig
+Sprig looks for matching JSON files in conf/sprig
 
        User.json
        Address.json
     
-!If you use different data for development, test, and production, pass a directory name:
+If you use different data for development, test, and production, pass a directory name:
 
     Sprig.load("prod", User.class, Address.class);
 
-Sprig will load files from conf/sprig/prod
+Sprig loads files from conf/sprig/prod
 
 ### JSON files
 #####User.json
@@ -32,7 +32,7 @@ Sprig will load files from conf/sprig/prod
     }
       
 ### Relational Data
-If one model has a reference to another model, use a *sprig_id*.  Sprig will use these during loading to resolve references.
+When a model references another model, use a *sprig_id*.  Sprig uses these during loading to resolve references.
 
 #####User.json
 
@@ -43,17 +43,18 @@ If one model has a reference to another model, use a *sprig_id*.  Sprig will use
     ....
     {"sprig_id":2,....
 
-*sprig_id*s can be integers or strings.  They must be unique within each model.
+*sprig_id*s can be integers or strings.  They must be unique within each model.  sprig_ids are not persisted to the database.
 
 #### Ordering
-Sprig manages dependencies between models automatically.  In our example models, User has an Address property. Sprig will load Address before User, so that Address's database-genereated *id* is available when user.address is set.
+Sprig manages dependencies between models automatically.  In our example models, User has an Address property. Sprig loads Address before User, so that Address's database-genereated *id* is available when user.address is set.
 
-Sprig will raise an exception if a circular dependency is detected.
+Sprig raises an exception if a circular dependency is detected.
 
 ### Loaders
-Sprig's default loader will load data into models with getters and setters.  It uses Spring's BeanWrapperImpl.
+Sprig's default loader loads data into models with getters and setters.  It uses Spring's BeanWrapperImpl.
 
-If you have public fields, define a custom loader and override the *parse* method. 
+If your model has publics fields instead of getters and setters, then create a custom loader.
+Override the *parse* method like this:
 
     @Override
     public void parse(User obj, Map<String,Object> map)
@@ -71,14 +72,12 @@ If you have public fields, define a custom loader and override the *parse* metho
 ### Custom Loaders
 The arguments to Sprig.load must either be a class, such as User.class, or a custom loader that implements SprigLoader.
 
-Use *setLoader* to install a custom loader. 
-
     Sprig.load(MyCustomUserLoader(), Address.class, ...);
 
 ### Idempotent Loading
 The default loader inserts each parsed model object into the database. This can lead to duplicate records if you restart an application without clearing the database.
 
-An idempotent loader will only insert records if they do not already exist.     
+An idempotent loader only insert records if they do not already exist.     
 
 Create a custom loader and override the *save* method.
 
@@ -94,7 +93,7 @@ Create a custom loader and override the *save* method.
 
 
 ### EBean
-Sprig's default loader will save models using Model.save. If the model object is not a Model then you must create
+Sprig's default loader uses Model.save. If your model is not derived from Model then you must create
 a custom loader and implement save.
 
 	public void save(Object obj) 
@@ -114,4 +113,4 @@ a custom loader and implement save.
 ### Database execution
 Sprig is generally used in Global.java.  For JPA persistence you need to use JPA.withTransaction or other similar mechanism.
 
-SprigLoader has a close method that can be used to close any database connections.
+SprigLoader has a close method that can be used to close any database connections. The close method is called after all loading has completed.
