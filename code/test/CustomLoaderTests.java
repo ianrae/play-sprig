@@ -56,8 +56,6 @@ public class CustomLoaderTests extends BaseTest
 
 		@Override
 		public void close() {
-			// TODO Auto-generated method stub
-			
 		}
 		
 	}
