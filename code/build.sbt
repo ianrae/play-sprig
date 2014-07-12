@@ -1,4 +1,4 @@
-name := "sprig"
+name := "play-sprig"
 
 version := "0.1-SNAPSHOT"
 
