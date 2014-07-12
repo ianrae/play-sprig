@@ -8,18 +8,18 @@ Sprig is based on the Ruby Sprig project (see [http://vigetlabs.github.io/sprig/
 ##Installing
 In build.sbt add play-sprig to dependencies:
 
-libraryDependencies ++= Seq(
-  javaJdbc,
-  javaEbean,
-  cache,
-  "play-sprig" % "play-sprig_2.10" % "0.1-SNAPSHOT"	//** add this line**
-)     
+	libraryDependencies ++= Seq(
+	  javaJdbc,
+	  javaEbean,
+	  cache,
+	  "play-sprig" % "play-sprig_2.10" % "0.1-SNAPSHOT"	//** add this line**
+	)     
 
 And add a resolver:
 
-resolvers ++= Seq(
-Resolver.url("play-sprig", new URL("http://ianrae.github.io/snapshot/"))(Resolver.ivyStylePatterns)
-//)
+	resolvers ++= Seq(
+	Resolver.url("play-sprig", new URL("http://ianrae.github.io/snapshot/"))(Resolver.ivyStylePatterns)
+	//)
 
 ##Usage
 In your application's startup code, such as Global.java, use Sprig to load data for your models:
