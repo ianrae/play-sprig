@@ -33,6 +33,7 @@ Sprig loads files from conf/sprig/prod
       
 ### Relational Data
 When a model references another model, use a *sprig_id*.  Sprig uses these during loading to resolve references.
+These are synthetic ids that only exist during the loading; they are not persisted to the database.
 
 #####User.json
 
@@ -43,10 +44,10 @@ When a model references another model, use a *sprig_id*.  Sprig uses these durin
     ....
     {"sprig_id":2,....
 
-*sprig_id*s can be integers or strings.  They must be unique within each model.  sprig_ids are not persisted to the database.
+*sprig_id*s can be integers or strings.  They must be unique within each model. 
 
 #### Ordering
-Sprig manages dependencies between models automatically.  In our example models, User has an Address property. Sprig loads Address before User, so that Address's database-genereated *id* is available when user.address is set.
+Sprig manages dependencies between models automatically.  In our example, the User model references Address. Sprig loads Address before User, so that Address's database-genereated *id* is available when user.address is set.
 
 Sprig raises an exception if a circular dependency is detected.
 
