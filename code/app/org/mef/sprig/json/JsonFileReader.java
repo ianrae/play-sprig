@@ -55,6 +55,6 @@ public class JsonFileReader implements Reader
 	
 	private void log(String s)
 	{
-		Logger.info(s);
+		Logger.info("[Sprig] " + s);
 	}
 }

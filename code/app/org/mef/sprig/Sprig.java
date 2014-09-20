@@ -115,7 +115,7 @@ public class Sprig
 	
 	protected void log(String s)
 	{
-		Logger.info(s);
+		Logger.info("[Sprig] " + s);
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -269,7 +269,7 @@ public class Sprig
 				String className = wrapper.getNameOfClassBeingLoaded();
 				if (className.equals(vid.targetClassName))
 				{
-					log("a " + className);
+					//log("a " + className);
 					if (resolveAsDeferredId(vid))
 					{
 						viaL.remove(vid);

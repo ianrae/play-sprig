@@ -68,7 +68,7 @@ public class Wrapper
 				if (containsVia(val))
 				{
 //					String data2 = "{'type':'Shirt', 'items':[{'id':1,'color':'<% sprig_record(Color,2)%>'}]}";
-					System.out.println(key);
+					//System.out.println(key);
 					val = val.replace("<%", "");
 					val = val.replace("%>", "");
 //					String target = "sprig_record(";

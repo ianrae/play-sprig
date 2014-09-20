@@ -20,7 +20,7 @@ public class MyResourceReader
 	public String read(String relPath)
 	{
 		String contents = null;
-		Logger.info("rr: read: " + relPath);
+		log(String.format("%s.. ", relPath));
 		InputStream in = this.getStream(relPath);
 		if (in != null)
 		{
@@ -32,13 +32,13 @@ public class MyResourceReader
 		}
 		return contents;
 	}
-	
+
 	InputStream getStream(String relPath)
 	{
 		Application app = getApp();
 		if (app == null)
 		{
-			Logger.info("rr: no play app. try as file");
+			log("no play app. try as file");
 			File f = new File(relPath);
 			FileInputStream fstream = null;
 			try {
@@ -48,16 +48,16 @@ public class MyResourceReader
 			}
 			return fstream;
 		}
-		
+
 		InputStream in = app.resourceAsStream(relPath); 
 		if (in != null)
 		{
-			Logger.info("rr: found resource");
+			log("found resource");
 			return in;
 		}
 		else
 		{
-			Logger.info("rr: try as file");
+			log("try as file");
 			File f = app.getFile(relPath);
 			FileInputStream fstream = null;
 			try {
@@ -78,20 +78,28 @@ public class MyResourceReader
 		}
 		return null;
 	}
-	
+
 	private String readInputStream(InputStream input) throws IOException 
 	{
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 		StringBuilder sb = new StringBuilder();
-        while (true) 
-        {
-            String line = reader.readLine();
-            if (line == null) break;
-            sb.append(line);
-            sb.append('\n');
-        }
-        
-	    String everything = sb.toString();
-	    return everything;
-    }
+		while (true) 
+		{
+			String line = reader.readLine();
+			if (line == null) break;
+			sb.append(line);
+			sb.append('\n');
+		}
+
+		String everything = sb.toString();
+		return everything;
+	}
+
+
+
+	//--helper--
+	protected void log(String s)
+	{
+		Logger.info("[Sprig] " + s);
+	}
 }

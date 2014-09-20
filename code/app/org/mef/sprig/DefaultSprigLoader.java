@@ -26,7 +26,7 @@ public class DefaultSprigLoader implements SprigLoader<Object>
 	@Override
 	public void parse(Object obj, Map<String,Object> map) 
 	{
-		log("A");
+		//log("A");
 		BeanWrapperImpl w = new BeanWrapperImpl(obj);
 		
 		for(String propName : map.keySet())
@@ -73,7 +73,7 @@ public class DefaultSprigLoader implements SprigLoader<Object>
 	//--helper--
 	protected void log(String s)
 	{
-		Logger.info(s);
+		Logger.info("[Sprig] " + s);
 	}
 	
 }
