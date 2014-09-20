@@ -22,6 +22,11 @@ public class Sprig
 	protected static Sprig theInstance;
 	protected static Reader reader;
 	
+	public static String version()
+	{
+		return "v0.1.1";
+	}
+	
 	/**
 	 * Sets the directory to be used, when you want JSON files in some other directory
 	 * than 'conf/sprig'.
