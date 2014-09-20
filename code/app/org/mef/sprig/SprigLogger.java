@@ -13,6 +13,9 @@ public class SprigLogger
 	}
 	public static void logDebug(String s)
 	{
-		Logger.info("[Sprig] " + s);
+		if (debugLoggingEnabled)
+		{
+			Logger.info("[Sprig] " + s);
+		}
 	}
 }
