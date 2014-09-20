@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mef.sprig.SprigLogger;
 import org.mef.sprig.util.ResourceReader;
 
 import play.Logger;
@@ -55,6 +56,6 @@ public class JsonFileReader implements Reader
 	
 	private void log(String s)
 	{
-		Logger.info("[Sprig] " + s);
+		SprigLogger.log(s);
 	}
 }

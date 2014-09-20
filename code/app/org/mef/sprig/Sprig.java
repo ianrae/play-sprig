@@ -24,7 +24,7 @@ public class Sprig
 	
 	public static String version()
 	{
-		return "v0.1.1";
+		return "v0.1.2";
 	}
 	
 	/**
@@ -42,6 +42,11 @@ public class Sprig
 	public static void setReader(Reader r)
 	{
 		reader = r;
+	}
+	
+	public static void enableDebugLogging(boolean b)
+	{
+		SprigLogger.debugLoggingEnabled = b;
 	}
 	
 	/**
@@ -120,7 +125,7 @@ public class Sprig
 	
 	protected void log(String s)
 	{
-		Logger.info("[Sprig] " + s);
+		SprigLogger.log(s);
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -129,9 +134,10 @@ public class Sprig
 		int numObjLoaded = 0;
 		
 		List<Object> loadedObjL = null;
+		String dir = getDir(subDir);
+		log("dir: " + dir);
 		for(Wrapper wrapper : wrapperL)
 		{
-			String dir = getDir(subDir);
 			loadedObjL = wrapper.load(dir, viaL);  //read the JSON
 			
 			addToResultMap(wrapper.getLoader().getClassBeingLoaded(), loadedObjL);

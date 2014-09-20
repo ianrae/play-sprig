@@ -73,7 +73,7 @@ public class DefaultSprigLoader implements SprigLoader<Object>
 	//--helper--
 	protected void log(String s)
 	{
-		Logger.info("[Sprig] " + s);
+		SprigLogger.log(s);
 	}
 	
 }

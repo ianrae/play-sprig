@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.mef.sprig.SprigLogger;
+
 import play.Application;
 import play.Logger;
 import play.Play;
@@ -20,7 +22,7 @@ public class MyResourceReader
 	public String read(String relPath)
 	{
 		String contents = null;
-		log(String.format("%s.. ", relPath));
+		SprigLogger.logDebug(String.format("%s.. ", relPath));
 		InputStream in = this.getStream(relPath);
 		if (in != null)
 		{
@@ -38,7 +40,7 @@ public class MyResourceReader
 		Application app = getApp();
 		if (app == null)
 		{
-			log("no play app. try as file");
+			SprigLogger.logDebug("no play app. try as file");
 			File f = new File(relPath);
 			FileInputStream fstream = null;
 			try {
@@ -52,12 +54,12 @@ public class MyResourceReader
 		InputStream in = app.resourceAsStream(relPath); 
 		if (in != null)
 		{
-			log("found resource");
+			SprigLogger.logDebug("found resource");
 			return in;
 		}
 		else
 		{
-			log("try as file");
+			SprigLogger.logDebug("try as app.getFile");
 			File f = app.getFile(relPath);
 			FileInputStream fstream = null;
 			try {
@@ -100,6 +102,6 @@ public class MyResourceReader
 	//--helper--
 	protected void log(String s)
 	{
-		Logger.info("[Sprig] " + s);
+		SprigLogger.log(s);
 	}
 }
