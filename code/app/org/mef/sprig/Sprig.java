@@ -32,7 +32,7 @@ public class Sprig
 	 * than 'conf/sprig'.
 	 * 
 	 * Used internally for unit testing. 
-	 * @param dir
+	 * @param dir folder with sprig json files
 	 */
 	public static void setDir(String dir)
 	{
@@ -52,8 +52,8 @@ public class Sprig
 	/**
 	 * Load the seed data for the given modes.  
 	 * @param objs Each object is either a Class of a model to be loaded, or a loader that implements SprigLoader
-	 * @return
-	 * @throws Exception
+	 * @return number objects
+	 * @throws Exception something bad happened
 	 */
 	public static int load(Object... objs) throws Exception
 	{
@@ -62,10 +62,10 @@ public class Sprig
 	
 	/**
 	 * Load the seed data for the given modes.  
-	 * @param dir A sub-directory (under 'conf/sprig') in which to load JSON files.
+	 * @param subDir A sub-directory (under 'conf/sprig') in which to load JSON files.
 	 * @param objs Each object is either a Class of a model to be loaded, or a loader that implements SprigLoader
-	 * @return
-	 * @throws Exception
+	 * @return number of json files loaded
+	 * @throws Exception something bad happened
 	 */
 	@SuppressWarnings("rawtypes")
 	public static int load(String subDir, Object... objs) throws Exception

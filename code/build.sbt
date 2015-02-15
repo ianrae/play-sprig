@@ -1,6 +1,10 @@
 name := "play-sprig"
 
-version := "0.1-SNAPSHOT"
+//0.2 is java8 build
+version := "0.2-SNAPSHOT"
+
+scalaVersion := "2.11.4"
+
 
 libraryDependencies ++= Seq(
   javaJdbc,
@@ -9,4 +13,5 @@ libraryDependencies ++= Seq(
   "commons-io" % "commons-io" % "2.3"
 )     
 
-play.Project.playJavaSettings
+//play.Project.playJavaSettings
+lazy val root = (project in file(".")).enablePlugins(PlayJava)
