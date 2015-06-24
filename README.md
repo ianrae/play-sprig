@@ -88,7 +88,7 @@ Override the *parse* method like this:
 ### Custom Loaders
 The arguments to Sprig.load must either be a class, such as User.class, or a custom loader that implements SprigLoader.
 
-    Sprig.load(MyCustomUserLoader(), Address.class, ...);
+    Sprig.load(new MyCustomUserLoader(), Address.class, ...);
 
 ### Idempotent Loading
 The default loader inserts each parsed model object into the database. This can lead to duplicate records if you restart an application without clearing the database.
