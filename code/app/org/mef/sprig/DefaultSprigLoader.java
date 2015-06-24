@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.springframework.beans.BeanWrapperImpl;
 
-import play.Logger;
 //import play.db.ebean.Model; deprecated in Play 2.4
 import com.avaje.ebean.Model;
 

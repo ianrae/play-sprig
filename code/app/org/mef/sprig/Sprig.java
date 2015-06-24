@@ -9,8 +9,6 @@ import org.mef.sprig.json.Reader;
 import org.mef.sprig.util.TSortNode;
 import org.mef.sprig.util.TopologicalSort;
 
-import play.Logger;
-
 /** 
  * Main API class for Sprig.
  * Loads JSON into model objects and saves them to the database.

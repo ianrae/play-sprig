@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import org.mef.sprig.SprigLogger;
 
 import play.Application;
-import play.Logger;
 import play.Play;
 
 //reads files in conf/ dir. Works in prod and dev mode

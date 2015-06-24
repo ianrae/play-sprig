@@ -7,8 +7,6 @@ import java.util.Map;
 import org.mef.sprig.SprigLogger;
 import org.mef.sprig.util.ResourceReader;
 
-import play.Logger;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
